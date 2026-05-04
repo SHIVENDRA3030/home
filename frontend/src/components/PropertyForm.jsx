@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback } from 'react'
 import { motion } from 'framer-motion'
+import CustomSelect from './CustomSelect'
 
 const AMENITY_ICONS = {
   parking: '🅿️',
@@ -145,59 +146,49 @@ export default function PropertyForm({ config, onPredict, onReset, loading }) {
       <div className="form-row cols-2">
         <div className="form-group">
           <label htmlFor="city">City</label>
-          <select
+          <CustomSelect
             id="city"
             value={form.city}
-            onChange={e => handleChange('city', e.target.value)}
-            style={errors.city ? { borderColor: 'var(--rose)' } : {}}
-          >
-            <option value="">Select City</option>
-            {Object.keys(config.cities).map(city => (
-              <option key={city} value={city}>{city}</option>
-            ))}
-          </select>
+            onChange={val => handleChange('city', val)}
+            options={Object.keys(config.cities)}
+            placeholder="Select City"
+            hasError={!!errors.city}
+          />
         </div>
         <div className="form-group">
           <label htmlFor="locality">Locality</label>
-          <select
+          <CustomSelect
             id="locality"
             value={form.locality}
-            onChange={e => handleChange('locality', e.target.value)}
+            onChange={val => handleChange('locality', val)}
+            options={localities}
+            placeholder={form.city ? 'Select Locality' : 'Select city first'}
             disabled={!form.city}
-            style={errors.locality ? { borderColor: 'var(--rose)' } : {}}
-          >
-            <option value="">{form.city ? 'Select Locality' : 'Select city first'}</option>
-            {localities.map(loc => (
-              <option key={loc} value={loc}>{loc}</option>
-            ))}
-          </select>
+            hasError={!!errors.locality}
+          />
         </div>
       </div>
 
       <div className="form-row cols-2">
         <div className="form-group">
           <label htmlFor="property_type">Property Type</label>
-          <select
+          <CustomSelect
             id="property_type"
             value={form.property_type}
-            onChange={e => handleChange('property_type', e.target.value)}
-          >
-            {config.property_types.map(pt => (
-              <option key={pt} value={pt}>{pt}</option>
-            ))}
-          </select>
+            onChange={val => handleChange('property_type', val)}
+            options={config.property_types}
+            placeholder="Select Property Type"
+          />
         </div>
         <div className="form-group">
           <label htmlFor="furnishing">Furnishing</label>
-          <select
+          <CustomSelect
             id="furnishing"
             value={form.furnishing}
-            onChange={e => handleChange('furnishing', e.target.value)}
-          >
-            {config.furnishing_options.map(f => (
-              <option key={f} value={f}>{f}</option>
-            ))}
-          </select>
+            onChange={val => handleChange('furnishing', val)}
+            options={config.furnishing_options}
+            placeholder="Select Furnishing"
+          />
         </div>
       </div>
 
@@ -223,27 +214,23 @@ export default function PropertyForm({ config, onPredict, onReset, loading }) {
         </div>
         <div className="form-group">
           <label htmlFor="bedrooms">Bedrooms</label>
-          <select
+          <CustomSelect
             id="bedrooms"
             value={form.bedrooms}
-            onChange={e => handleChange('bedrooms', e.target.value)}
-          >
-            {[1,2,3,4,5,6].map(n => (
-              <option key={n} value={n}>{n} BHK</option>
-            ))}
-          </select>
+            onChange={val => handleChange('bedrooms', val)}
+            options={[1,2,3,4,5,6].map(n => ({ label: `${n} BHK`, value: n.toString() }))}
+            placeholder="Select Bedrooms"
+          />
         </div>
         <div className="form-group">
           <label htmlFor="bathrooms">Bathrooms</label>
-          <select
+          <CustomSelect
             id="bathrooms"
             value={form.bathrooms}
-            onChange={e => handleChange('bathrooms', e.target.value)}
-          >
-            {[1,2,3,4].map(n => (
-              <option key={n} value={n}>{n}</option>
-            ))}
-          </select>
+            onChange={val => handleChange('bathrooms', val)}
+            options={[1,2,3,4].map(n => n.toString())}
+            placeholder="Select Bathrooms"
+          />
         </div>
       </div>
 
