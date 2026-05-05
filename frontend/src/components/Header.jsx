@@ -13,7 +13,7 @@ export default function Header({ config }) {
           <div className="logo-icon">🏠</div>
           <div className="logo-text">
             <h1>Home<span className="accent">Value</span> AI</h1>
-            <p className="subtitle">ML-powered property price prediction across 8 Indian cities</p>
+            <p className="subtitle">ML-powered property price prediction across 7 Indian cities</p>
           </div>
         </motion.div>
 
@@ -24,11 +24,11 @@ export default function Header({ config }) {
           transition={{ duration: 0.5, delay: 0.15 }}
         >
           <div className="stat">
-            <span className="stat-value">8</span>
+            <span className="stat-value">7</span>
             <span className="stat-label">Cities</span>
           </div>
           <div className="stat">
-            <span className="stat-value">80+</span>
+            <span className="stat-value">140+</span>
             <span className="stat-label">Localities</span>
           </div>
           <div className="stat">
@@ -36,11 +36,11 @@ export default function Header({ config }) {
             <span className="stat-label">Amenities</span>
           </div>
           <div className="stat">
-            <span className="stat-value">5</span>
+            <span className="stat-value">3</span>
             <span className="stat-label">Property Types</span>
           </div>
           <div className="stat">
-            <span className="stat-value">10K</span>
+            <span className="stat-value">14K+</span>
             <span className="stat-label">Training Data</span>
           </div>
         </motion.div>

@@ -291,7 +291,7 @@ with open(output_path, 'w', newline='') as f:
     writer.writeheader()
     writer.writerows(rows)
 
-print(f"✅ Generated {ROWS} rows → {output_path}")
+print(f"Generated {ROWS} rows -> {output_path}")
 print(f"   Cities: {len(CITIES)} | Localities: {sum(len(v) for v in CITIES.values())}")
 print(f"   Property types: {len(PROPERTY_TYPES)} | Amenities: {len(AMENITIES)}")
 print(f"   Columns: {len(fieldnames)}")

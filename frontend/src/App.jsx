@@ -5,6 +5,7 @@ import PropertyForm from './components/PropertyForm'
 import ResultCard from './components/ResultCard'
 import ErrorCard from './components/ErrorCard'
 import ModelInfo from './components/ModelInfo'
+import ShaderBackground from './components/ShaderBackground'
 import './App.css'
 
 const API_BASE = '/api'
@@ -61,10 +62,8 @@ export default function App() {
 
   return (
     <div className="app">
-      {/* Ambient background effects */}
-      <div className="ambient-orb ambient-orb-1" />
-      <div className="ambient-orb ambient-orb-2" />
-      <div className="ambient-orb ambient-orb-3" />
+      {/* WebGL Animated Background */}
+      <ShaderBackground />
 
       <Header config={config} />
 

@@ -34,17 +34,16 @@ os.makedirs(REPORT_DIR, exist_ok=True)
 
 # ── 1. Load data ──────────────────────────────────────────────
 print("=" * 60)
-print("🏠 HomeValue AI — Model Training Pipeline v2")
+print("HomeValue AI Model Training Pipeline v2")
 print("=" * 60)
-print("\n📂 Loading dataset...")
+print("\nLoading dataset...")
 df = pd.read_csv(DATA_PATH)
-print(f"   Shape: {df.shape}")
-print(f"   Columns: {list(df.columns)}")
-print(f"   Price range: ₹{df['price'].min():,} – ₹{df['price'].max():,}")
-print(f"   Price median: ₹{df['price'].median():,.0f}")
+print(f"Dataset loaded: {df.shape[0]} rows, {df.shape[1]} columns")
+print(f"   Price range: {df['price'].min():,} – {df['price'].max():,}")
+print(f"   Price median: {df['price'].median():,.0f}")
 
 # ── 2. Encode categorical columns ────────────────────────────
-print("\n🔧 Encoding categorical features...")
+print("\nEncoding categorical features...")
 encoders = {}
 categorical_cols = ['city', 'locality', 'property_type', 'furnishing']
 
@@ -55,7 +54,7 @@ for col in categorical_cols:
     print(f"   {col}: {len(le.classes_)} classes")
 
 # ── 3. Feature engineering ────────────────────────────────────
-print("\n📐 Engineering features...")
+print("\nEngineering features...")
 
 # Derived features
 df['price_per_sqft_base'] = df['area']  # will be used as-is
@@ -79,15 +78,15 @@ feature_cols = [
 
 X = df[feature_cols]
 y = df['price']
-print(f"   Features: {len(feature_cols)}")
+print(f"Data preprocessed: {X.shape[1]} features created.")
 print(f"   New features: amenity_count, bed_bath_ratio, area_per_bedroom")
 
 # ── 4. Train/test split ──────────────────────────────────────
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-print(f"\n📊 Split: Train={X_train.shape[0]}, Test={X_test.shape[0]}")
+print(f"\nSplit: Train={X_train.shape[0]}, Test={X_test.shape[0]}")
 
 # ── 5. Model definitions with hyperparameter search spaces ────
-print("\n🤖 Training models with cross-validation & hyperparameter tuning...")
+print("\nTraining models with cross-validation & hyperparameter tuning...")
 
 model_configs = {
     'Linear Regression': {
@@ -128,7 +127,7 @@ results = {}
 cv_folds = 5
 
 for name, config in model_configs.items():
-    print(f"\n  ── {name} ──")
+    print(f"\n  -- {name} --")
 
     if config['params']:
         # Hyperparameter tuning
@@ -169,24 +168,24 @@ for name, config in model_configs.items():
     }
 
     print(f"  CV R² (mean):  {cv_score:.4f}")
-    print(f"  Test R²:       {r2:.4f}")
-    print(f"  MAE:           ₹{mae:,.0f}")
-    print(f"  RMSE:          ₹{rmse:,.0f}")
+    print(f"Base Model R² Score: {r2:.4f}")
+    print(f"  MAE:           {mae:,.0f}")
+    print(f"  RMSE:          {rmse:,.0f}")
     print(f"  MAPE:          {mape:.2f}%")
 
 # ── 6. Select best model ──────────────────────────────────────
 print("\n" + "=" * 60)
 best_name = max(results, key=lambda k: results[k]['r2'])
 best = results[best_name]
-print(f"🏆 Best model: {best_name}")
+print(f"Best model: {best_name}")
 print(f"   Test R²:  {best['r2']:.4f}")
 print(f"   CV R²:    {best['cv_r2']:.4f}")
-print(f"   MAE:      ₹{best['mae']:,.0f}")
-print(f"   RMSE:     ₹{best['rmse']:,.0f}")
+print(f"   MAE:      {best['mae']:,.0f}")
+print(f"   RMSE:     {best['rmse']:,.0f}")
 print(f"   MAPE:     {best['mape']:.2f}%")
 
 # ── 7. Train quantile models for prediction intervals ─────────
-print("\n📏 Training quantile models for prediction intervals...")
+print("\nTraining quantile models for prediction intervals...")
 print("   (Using GradientBoosting with quantile loss)")
 
 # Use GradientBoostingRegressor with quantile loss for prediction intervals
@@ -201,17 +200,17 @@ for alpha in [0.1, 0.5, 0.9]:  # 10th, 50th (median), 90th percentile
     )
     qr.fit(X_train, y_train)
     quantile_models[alpha] = qr
-    print(f"   α={alpha:.1f}: trained")
+    print(f"Quantile {alpha} Model trained")
 
 # Compute 80% prediction interval coverage
 low = quantile_models[0.1].predict(X_test)
 high = quantile_models[0.9].predict(X_test)
 coverage_80 = np.mean((y_test >= low) & (y_test <= high))
 print(f"\n   80% prediction interval coverage: {coverage_80:.1%}")
-print(f"   Avg interval width: ₹{(high - low).mean():,.0f}")
+print(f"   Avg interval width: {(high - low).mean():,.0f}")
 
 # ── 8. Save everything ────────────────────────────────────────
-print("\n💾 Saving artifacts...")
+print("\nSaving models and artifacts...")
 
 joblib.dump(best['model'], os.path.join(MODEL_DIR, 'house_model.pkl'))
 joblib.dump(encoders, os.path.join(MODEL_DIR, 'encoders.pkl'))
@@ -221,17 +220,17 @@ joblib.dump(feature_cols, os.path.join(MODEL_DIR, 'feature_cols.pkl'))
 joblib.dump(quantile_models[0.1], os.path.join(MODEL_DIR, 'quantile_10.pkl'))
 joblib.dump(quantile_models[0.9], os.path.join(MODEL_DIR, 'quantile_90.pkl'))
 
-print("   ✅ house_model.pkl (best model)")
-print("   ✅ encoders.pkl")
-print("   ✅ feature_cols.pkl")
-print("   ✅ quantile_10.pkl (lower bound model)")
-print("   ✅ quantile_90.pkl (upper bound model)")
+print("   house_model.pkl (best model)")
+print("   encoders.pkl")
+print("   feature_cols.pkl")
+print("   quantile_10.pkl (lower bound model)")
+print("   quantile_90.pkl (upper bound model)")
 
 # Clean up unused file
 unused = os.path.join(MODEL_DIR, 'label_encoder.pkl')
 if os.path.exists(unused):
     os.remove(unused)
-    print("   🗑️  Removed unused label_encoder.pkl")
+    print("   Removed unused label_encoder.pkl")
 
 # ── 9. Save training report ───────────────────────────────────
 report = {
@@ -267,7 +266,7 @@ report = {
 
 with open(os.path.join(REPORT_DIR, 'training_report.json'), 'w') as f:
     json.dump(report, f, indent=2)
-print(f"\n📋 Report saved → reports/training_report.json")
+print(f"\nReport saved → reports/training_report.json")
 
 # ── 10. Feature importance ────────────────────────────────────
 if hasattr(best['model'], 'feature_importances_'):
@@ -276,5 +275,6 @@ if hasattr(best['model'], 'feature_importances_'):
     for feat, val in imp.head(10).items():
         bar = "█" * int(val * 100)
         print(f"   {feat:25s} {val:.4f} {bar}")
+    print("All artifacts saved to model/ directory.")
 
-print("\n✅ Training complete!")
+print("Training Complete!")

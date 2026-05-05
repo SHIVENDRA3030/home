@@ -123,7 +123,7 @@ CITIES = {
 }
 
 PROPERTY_TYPES = ['Apartment', 'Villa', 'Independent House', 'Penthouse', 'Studio']
-FURNISHING_OPTIONS = ['Unfurnished', 'Semi-Furnished', 'Fully-Furnished']
+FURNISHING_OPTIONS = ['Unfurnished', 'Semi-Furnished', 'Fully Furnished']
 
 AMENITY_LIST = [
     'parking', 'pool', 'garden', 'gym', 'security', 'lift',
@@ -204,7 +204,7 @@ def predict():
         city = data.get('city', '').strip()
         locality = data.get('locality', '').strip()
         property_type = data.get('property_type', '').strip()
-        furnishing = data.get('furnishing', '').strip()
+        furnishing = data.get('furnishing', '').strip().replace('Fully-Furnished', 'Fully Furnished')
 
         # Numeric fields with validation
         try:
